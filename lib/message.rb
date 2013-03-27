@@ -8,11 +8,19 @@ class Message
   end
 
   def create
-    conn.post("#{HOSTNAME}/messages/",@params)
+    response = Faraday.post do |request|
+  
+      request.url 'http://localhost:3000/messages/'
+    
+      request.headers['Content-Type'] = 'application/json'
+    
+      request.body = {message: {text: self.text}}.to_json
+    end
   end
 
   def self.chat_feed
-    conn.get("#{HOSTNAME}/messages/")
+    response = conn.get("#{HOSTNAME}/messages/")
+    chat = JSON.parse(response.body)
   end
 
   private
