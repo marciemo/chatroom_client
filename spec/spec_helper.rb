@@ -7,5 +7,6 @@ require 'pry'
 require 'pry-debugger'
 
 require 'message'
+require 'room'
 
 HOSTNAME = 'http://localhost:3000'

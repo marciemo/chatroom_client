@@ -1,26 +1,25 @@
 class Message
 
-  attr_reader :text
+  attr_reader :text, :room_id
 
-  def initialize(text)
-    @text = text
-    @params = {:text => text}
+  def initialize(attributes)
+    @text = attributes[:text]
+    @room_id = attributes[:room_id]
+    @params = attributes
   end
 
   def create
     response = Faraday.post do |request|
-  
-      request.url 'http://localhost:3000/messages/'
-    
+      request.url "#{HOSTNAME}/messages/"
       request.headers['Content-Type'] = 'application/json'
-    
-      request.body = {message: {text: self.text}}.to_json
+      request.body = {message: {text: self.text, room_id: self.room_id}}.to_json
     end
   end
 
   def self.chat_feed
     response = conn.get("#{HOSTNAME}/messages/")
-    chat = JSON.parse(response.body)
+    response.body
+    JSON.parse(response.body)
   end
 
   private
